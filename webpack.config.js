@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
-        app: "./src/js/index.js"
+        app: "./index.js"
     },
 
     output: {
@@ -28,22 +28,44 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
+                    "style-loader",
+                    MiniCssExtractPlugin.loader,
                     {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: "../",
-                            hmr: process.env.NODE_ENV === "development"
-                        }
+                        loader: "css-loader",
+                        options: { sourceMap: true }
                     },
-                    "css-loader"
+                    {
+                        loader: "postcss-loader",
+                        options: { sourceMap: true, config: { path: "./postcss.config.js"} }
+                    },
                 ]
             },
+
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    "style-loader",
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: "css-loader",
+                        options: { sourceMap: true }
+                    },
+                    {
+                        loader: "postcss-loader",
+                        options: { sourceMap: true, config: { path: "./postcss.config.js"} }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: { sourceMap: true }
+                    }
+                ]
+            }
         ]
     },
 
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "[name].css",
+            filename: "[name].css"
         })
-    ],
+    ]
 };
