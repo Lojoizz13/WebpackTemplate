@@ -1,20 +1,27 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const PATHS = {
+    src: path.join(__dirname, "../src"),
+    public: path.join(__dirname, "../public"),
+}
 
 module.exports = {
+
+    externals: {
+        paths: PATHS
+    },
+
     entry: {
-        app: "./index.js"
+        app: "./configs/index.js"
     },
 
     output: {
-        filename: "[name].js",
-        path: path.resolve(__dirname, "./public"),
-        publicPath: "/public"
-    },
-
-    devServer: {
-        overlay: true
+        filename: "js/[name].js",
+        path: PATHS.public,
+        publicPath: "/"
     },
 
     module: {
@@ -23,6 +30,14 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader"
+            },
+
+            {
+                test: /\.(png|jpg|gif|svg)$/,
+                loader: "file-loader",
+                options: {
+                    name: "[name].[ext]"
+                }
             },
 
             {
@@ -36,7 +51,7 @@ module.exports = {
                     },
                     {
                         loader: "postcss-loader",
-                        options: { sourceMap: true, config: { path: "./postcss.config.js"} }
+                        options: { sourceMap: true, config: { path: "./configs/postcss.config.js"} }
                     },
                 ]
             },
@@ -52,7 +67,7 @@ module.exports = {
                     },
                     {
                         loader: "postcss-loader",
-                        options: { sourceMap: true, config: { path: "./postcss.config.js"} }
+                        options: { sourceMap: true, config: { path: "./configs/postcss.config.js"} }
                     },
                     {
                         loader: "sass-loader",
@@ -65,7 +80,15 @@ module.exports = {
 
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "[name].css"
+            filename: "css/[name].css"
+        }),
+        new CopyWebpackPlugin([
+            { from: `${PATHS.src}/img`, to: `${PATHS.public}/img` },
+        ]),
+        new HtmlWebpackPlugin({
+            hash: false,
+            template: `${PATHS.src}/index.html`,
+            filename: `${PATHS.public}/index.html`
         })
     ]
 };
