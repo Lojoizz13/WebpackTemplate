@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const PATHS = {
     src: path.join(__dirname, "../src"),
     public: path.join(__dirname, "../public"),
+    configs: path.join(__dirname, "")
 }
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
     },
 
     entry: {
-        app: "./configs/index.js"
+        app: `${PATHS.configs}/index.js`
     },
 
     output: {
@@ -51,7 +52,7 @@ module.exports = {
                     },
                     {
                         loader: "postcss-loader",
-                        options: { sourceMap: true, config: { path: "./configs/postcss.config.js"} }
+                        options: { sourceMap: true, config: { path: `${PATHS.configs}/postcss.config.js`} }
                     },
                 ]
             },
@@ -67,7 +68,7 @@ module.exports = {
                     },
                     {
                         loader: "postcss-loader",
-                        options: { sourceMap: true, config: { path: "./configs/postcss.config.js"} }
+                        options: { sourceMap: true, config: { path: `${PATHS.configs}/postcss.config.js`} }
                     },
                     {
                         loader: "sass-loader",
